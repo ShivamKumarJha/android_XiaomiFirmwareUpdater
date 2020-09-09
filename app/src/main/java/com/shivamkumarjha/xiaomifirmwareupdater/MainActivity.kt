@@ -17,14 +17,18 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        callApi("https://raw.githubusercontent.com/RealmeUpdater/realme-updates-tracker/master/data/latest.yml")
+        callApi("https://raw.githubusercontent.com/XiaomiFirmwareUpdater/miui-updates-tracker/master/data/latest.yml")
+    }
 
+    private fun callApi(url: String) {
         val retrofit = Retrofit.Builder()
             .addConverterFactory(ScalarsConverterFactory.create())
-            .baseUrl("https://your.base.url/")
+            .baseUrl("https://dummy.base.url/")
             .build()
 
         val scalarService: ScalarService = retrofit.create(ScalarService::class.java)
-        val stringCall: Call<String> = scalarService.getStringResponse("https://raw.githubusercontent.com/XiaomiFirmwareUpdater/miui-updates-tracker/master/data/latest.yml")
+        val stringCall: Call<String> = scalarService.getStringResponse(url)
         stringCall.enqueue(object : Callback<String?> {
             override fun onResponse(call: Call<String?>?, response: Response<String?>) {
                 Log.d(TAG, "onResponse")
