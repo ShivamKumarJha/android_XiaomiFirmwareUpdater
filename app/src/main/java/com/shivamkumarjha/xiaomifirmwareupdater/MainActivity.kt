@@ -5,21 +5,29 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.io.File
+import java.io.IOException
+import java.io.OutputStreamWriter
 
 
 class MainActivity : AppCompatActivity() {
 
     private val TAG = "MainActivity"
+    private var gson = GsonBuilder()
+        .setPrettyPrinting()
+        .create()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        callApi("https://raw.githubusercontent.com/RealmeUpdater/realme-updates-tracker/master/data/latest.yml")
+        //callApi("https://raw.githubusercontent.com/RealmeUpdater/realme-updates-tracker/master/data/latest.yml")
         callApi("https://raw.githubusercontent.com/XiaomiFirmwareUpdater/miui-updates-tracker/master/data/latest.yml")
     }
 
@@ -39,14 +47,31 @@ class MainActivity : AppCompatActivity() {
                 }
                 if (response.body() != null) {
                     Log.d(TAG, "response not null")
-                    Log.d(TAG, convertYamlToJson(response.body().toString()))
+                    // yaml to json
+                    Log.d(TAG, "Converting yaml to json")
+                    val jsonString = convertYamlToJson(response.body().toString())
+                    // json to ArrayList
+                    Log.d(TAG, "Converting json to ArrayList")
+                    val detailsTypeToken = object : TypeToken<ArrayList<MiPhone>>() {}.type
+                    val miPhones: ArrayList<MiPhone> = gson.fromJson(jsonString, detailsTypeToken)
+                    // print to json file
+                    Log.d(TAG, "Storing ArrayList to file")
+                    val data = gson.toJson(miPhones)
+                    try {
+                        val file = File(filesDir, "Mi.json")
+                        val outputStreamWriter = OutputStreamWriter(file.outputStream())
+                        outputStreamWriter.write(data)
+                        outputStreamWriter.close()
+                    } catch (e: IOException) {
+                        Log.e(TAG, "File write failed: $e")
+                    }
                 } else {
                     Log.d(TAG, "response is null")
                 }
             }
 
             override fun onFailure(call: Call<String?>?, t: Throwable?) {
-                Log.d(TAG, "onFailure")
+                Log.e(TAG, "onFailure")
             }
         })
     }
