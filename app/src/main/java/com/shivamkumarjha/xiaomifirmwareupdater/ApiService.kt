@@ -12,6 +12,10 @@ interface ApiService {
     fun getStringResponse(@Url url: String?): Call<String>
 
     companion object {
+        const val miURL =
+            "https://raw.githubusercontent.com/XiaomiFirmwareUpdater/miui-updates-tracker/master/data/latest.yml"
+        const val miJSON = "Mi.json"
+
         fun create(): ApiService {
             val retrofit = Retrofit.Builder()
                 .addConverterFactory(ScalarsConverterFactory.create())
