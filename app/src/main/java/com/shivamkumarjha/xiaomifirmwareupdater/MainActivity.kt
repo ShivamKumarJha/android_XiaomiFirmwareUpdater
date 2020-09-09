@@ -3,6 +3,8 @@ package com.shivamkumarjha.xiaomifirmwareupdater
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -34,12 +36,12 @@ class MainActivity : AppCompatActivity() {
                 Log.d(TAG, "onResponse")
                 if (response.isSuccessful) {
                     Log.d(TAG, "response.isSuccessful")
-                    if (response.body() != null) {
-                        Log.d(TAG, "response not null")
-                        Log.d(TAG, response.body().toString())
-                    } else {
-                        Log.d(TAG, "response is null")
-                    }
+                }
+                if (response.body() != null) {
+                    Log.d(TAG, "response not null")
+                    Log.d(TAG, convertYamlToJson(response.body().toString()))
+                } else {
+                    Log.d(TAG, "response is null")
                 }
             }
 
@@ -47,5 +49,12 @@ class MainActivity : AppCompatActivity() {
                 Log.d(TAG, "onFailure")
             }
         })
+    }
+
+    fun convertYamlToJson(yaml: String): String {
+        val yamlReader = ObjectMapper(YAMLFactory())
+        val obj: Any = yamlReader.readValue(yaml, Any::class.java)
+        val jsonWriter = ObjectMapper()
+        return jsonWriter.writeValueAsString(obj)
     }
 }
