@@ -10,7 +10,9 @@ interface ApiInterface {
     fun getPhones(): Call<Void>
 
     companion object {
-        private var BASE_URL = "https://raw.githubusercontent.com/XiaomiFirmwareUpdater/miui-updates-tracker/master/data/"
+        private const val BASE_URL =
+            "https://raw.githubusercontent.com/XiaomiFirmwareUpdater/miui-updates-tracker/master/data/"
+
         fun create(): ApiInterface {
             val retrofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
