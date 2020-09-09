@@ -40,7 +40,7 @@ class MiPhoneViewHolder(
         phoneName.text = miPhone.name
         phoneCodeName.text = "Codename: ${miPhone.codename}"
         phoneAndroidVersion.text = "Android ${miPhone.android}"
-        phoneROMVersion.text = "MIUI Version ${miPhone.version}"
+        phoneROMVersion.text = "MIUI ${miPhone.version}"
         phoneROMSize.text = "Size: ${miPhone.size}"
         phoneROMBranch.text = miPhone.branch
         phoneROMDate.text = "Date: ${miPhone.date}"

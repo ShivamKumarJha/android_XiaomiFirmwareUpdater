@@ -13,9 +13,7 @@ import com.shivamkumarjha.xiaomifirmwareupdater.model.MiPhone
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.File
-import java.io.IOException
-import java.io.OutputStreamWriter
+import java.io.*
 
 class MainViewModel : ViewModel() {
     private var gson = GsonBuilder()
@@ -32,7 +30,31 @@ class MainViewModel : ViewModel() {
         return jsonWriter.writeValueAsString(obj)
     }
 
+    fun readFromFile(file: File): String? {
+        var jsonString: String? = null
+        try {
+            val inputStream: FileInputStream = file.inputStream()
+            val inputStreamReader = InputStreamReader(inputStream)
+            val bufferedReader = BufferedReader(inputStreamReader)
+            jsonString = bufferedReader.use { it.readText() }
+            inputStream.close()
+        } catch (e: FileNotFoundException) {
+            Log.e(TAG, "File not found: $e")
+        } catch (e: IOException) {
+            Log.e(TAG, "Can not read file: $e")
+        }
+        return jsonString
+    }
+
     fun callApi(file: File) {
+        // load from file initially if it exists
+        if (file.exists()) {
+            val jsonString = readFromFile(file)
+            val detailsTypeToken = object : TypeToken<ArrayList<MiPhone>>() {}.type
+            val phones: ArrayList<MiPhone> = gson.fromJson(jsonString, detailsTypeToken)
+            _getPhones.postValue(phones)
+        }
+        // call api
         val stringCall: Call<String> = ApiService.create().getStringResponse(ApiService.miURL)
         stringCall.enqueue(object : Callback<String?> {
             override fun onResponse(call: Call<String?>?, response: Response<String?>) {
