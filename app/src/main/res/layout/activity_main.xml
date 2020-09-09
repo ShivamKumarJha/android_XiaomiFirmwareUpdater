@@ -16,6 +16,13 @@
         app:iconifiedByDefault="false"
         app:queryBackground="@null" />
 
+    <ProgressBar
+        android:id="@+id/mi_progress_bar_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/view_margin" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mi_recycler_view"
         android:layout_width="match_parent"

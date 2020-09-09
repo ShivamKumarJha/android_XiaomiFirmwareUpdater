@@ -23,6 +23,13 @@ class MainViewModel : ViewModel() {
     private val _getPhones = MutableLiveData<ArrayList<MiPhone>>()
     val getPhones: LiveData<ArrayList<MiPhone>> = _getPhones
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
+    init {
+        _isLoading.postValue(true)
+    }
+
     fun convertYamlToJson(yaml: String): String {
         val yamlReader = ObjectMapper(YAMLFactory())
         val obj: Any = yamlReader.readValue(yaml, Any::class.java)
@@ -30,7 +37,7 @@ class MainViewModel : ViewModel() {
         return jsonWriter.writeValueAsString(obj)
     }
 
-    fun readFromFile(file: File): String? {
+    private fun readFromFile(file: File): String? {
         var jsonString: String? = null
         try {
             val inputStream: FileInputStream = file.inputStream()
@@ -55,10 +62,12 @@ class MainViewModel : ViewModel() {
             _getPhones.postValue(phones)
         }
         // call api
+        _isLoading.postValue(true)
         val stringCall: Call<String> = ApiService.create().getStringResponse(ApiService.miURL)
         stringCall.enqueue(object : Callback<String?> {
             override fun onResponse(call: Call<String?>?, response: Response<String?>) {
                 Log.d(TAG, "onResponse")
+                _isLoading.postValue(false)
                 if (response.isSuccessful) {
                     Log.d(TAG, "response.isSuccessful")
                 }
@@ -89,6 +98,7 @@ class MainViewModel : ViewModel() {
 
             override fun onFailure(call: Call<String?>?, t: Throwable?) {
                 Log.e(TAG, "onFailure")
+                _isLoading.postValue(false)
             }
         })
     }

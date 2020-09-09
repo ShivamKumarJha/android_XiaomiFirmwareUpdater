@@ -7,7 +7,9 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -32,6 +34,7 @@ class MainActivity : AppCompatActivity(), MiPhoneClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var miPhoneAdapter: MiPhoneAdapter
     private lateinit var searchView: SearchView
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +59,8 @@ class MainActivity : AppCompatActivity(), MiPhoneClickListener {
                 return false
             }
         })
+        // progressBar
+        progressBar = findViewById(R.id.mi_progress_bar_id)
         // recyclerView
         recyclerView = findViewById(R.id.mi_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -68,6 +73,12 @@ class MainActivity : AppCompatActivity(), MiPhoneClickListener {
         mainViewModel.callApi(file)
         mainViewModel.getPhones.observe(this, Observer {
             miPhoneAdapter.setMiPhones(it)
+        })
+        mainViewModel.isLoading.observe(this, Observer {
+            if (it)
+                progressBar.visibility = View.VISIBLE
+            else
+                progressBar.visibility = View.GONE
         })
     }
 
