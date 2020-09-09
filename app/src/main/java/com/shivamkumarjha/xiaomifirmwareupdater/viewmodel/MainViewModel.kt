@@ -30,7 +30,7 @@ class MainViewModel : ViewModel() {
         _isLoading.postValue(true)
     }
 
-    fun convertYamlToJson(yaml: String): String {
+    private fun convertYamlToJson(yaml: String): String {
         val yamlReader = ObjectMapper(YAMLFactory())
         val obj: Any = yamlReader.readValue(yaml, Any::class.java)
         val jsonWriter = ObjectMapper()
