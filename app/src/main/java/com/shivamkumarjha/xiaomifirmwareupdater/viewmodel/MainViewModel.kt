@@ -1,11 +1,15 @@
-package com.shivamkumarjha.xiaomifirmwareupdater
+package com.shivamkumarjha.xiaomifirmwareupdater.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import com.shivamkumarjha.xiaomifirmwareupdater.api.ApiService
+import com.shivamkumarjha.xiaomifirmwareupdater.model.MiPhone
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -17,6 +21,9 @@ class MainViewModel : ViewModel() {
     private var gson = GsonBuilder()
         .setPrettyPrinting()
         .create()
+
+    private val _getPhones = MutableLiveData<ArrayList<MiPhone>>()
+    val getPhones: LiveData<ArrayList<MiPhone>> = _getPhones
 
     fun convertYamlToJson(yaml: String): String {
         val yamlReader = ObjectMapper(YAMLFactory())
@@ -42,6 +49,7 @@ class MainViewModel : ViewModel() {
                     Log.d(TAG, "Converting json to ArrayList")
                     val detailsTypeToken = object : TypeToken<ArrayList<MiPhone>>() {}.type
                     val miPhones: ArrayList<MiPhone> = gson.fromJson(jsonString, detailsTypeToken)
+                    _getPhones.postValue(miPhones)
                     // print to json file
                     Log.d(TAG, "Storing ArrayList to file")
                     val data = gson.toJson(miPhones)
@@ -64,6 +72,6 @@ class MainViewModel : ViewModel() {
     }
 
     companion object {
-        const val TAG = "MainViewModel"
+        private const val TAG = "MainViewModel"
     }
 }

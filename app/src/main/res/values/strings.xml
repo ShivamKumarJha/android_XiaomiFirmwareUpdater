@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">XiaomiFirmwareUpdater</string>
+
+    <string name="download">Download</string>
+    <string name="download_confirm">Download this file?</string>
+    <string name="copy">Copy</string>
+    <string name="copied">Link copied to clipboard</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="search_phones">Search phones</string>
+    <string name="phone_codename">Phone codename</string>
+    <string name="phone_name">Phone name</string>
+    <string name="phone_android_version">Phone Android version</string>
+    <string name="phone_rom_version">Phone ROM version</string>
+    <string name="phone_rom_date">Phone ROM date</string>
+    <string name="phone_rom_branch">Phone ROM branch</string>
+    <string name="phone_rom_size">Phone ROM size</string>
+    <string name="phone_rom_md5">Phone ROM MD5</string>
 </resources>

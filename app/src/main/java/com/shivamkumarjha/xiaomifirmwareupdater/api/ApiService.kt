@@ -1,4 +1,4 @@
-package com.shivamkumarjha.xiaomifirmwareupdater
+package com.shivamkumarjha.xiaomifirmwareupdater.api
 
 import retrofit2.Call
 import retrofit2.Retrofit

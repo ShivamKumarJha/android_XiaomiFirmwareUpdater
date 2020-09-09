@@ -1,4 +1,4 @@
-package com.shivamkumarjha.xiaomifirmwareupdater
+package com.shivamkumarjha.xiaomifirmwareupdater.model
 
 import com.google.gson.annotations.SerializedName
 
